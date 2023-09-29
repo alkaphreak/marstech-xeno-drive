@@ -6,6 +6,7 @@ plugins {
     id("org.graalvm.buildtools.native") version "0.9.27"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
+    id("org.sonarqube") version "4.2.1.3168"
 }
 
 group = "fr.marstech"
@@ -35,9 +36,14 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
-    implementation("io.minio:minio:8.0.11")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    // https://mvnrepository.com/artifact/io.minio/minio
+    implementation("io.minio:minio:8.5.6")
+
+    // https://mvnrepository.com/artifact/io.kotest/kotest-assertions-core-jvm
+    testImplementation("io.kotest:kotest-assertions-core-jvm:5.7.2")
+    // https://mvnrepository.com/artifact/io.kotest/kotest-runner-junit5-jvm
+    testImplementation("io.kotest:kotest-runner-junit5-jvm:5.7.2")
 }
 
 tasks.withType<KotlinCompile> {
