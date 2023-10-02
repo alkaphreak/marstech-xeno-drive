@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="marstech-xeno-drive [sonar]" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="./gradlew sonar -Dsonar.projectKey=marstech-xeno-drive -Dsonar.projectName='marstech-xeno-drive' -Dsonar.host.url=https://sonar.naz.marstech.fr -Dsonar.token=sqp_db244f23cbb248a0d6e2ffebc5a10fff744fd40d" />
+    <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+    <option name="SCRIPT_PATH" value="$PROJECT_DIR$/ops/gradle-sonar.sh" />
+    <option name="SCRIPT_OPTIONS" value="" />
+    <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+    <option name="INTERPRETER_PATH" value="/bin/bash" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="EXECUTE_IN_TERMINAL" value="true" />
+    <option name="EXECUTE_SCRIPT_FILE" value="true" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>
