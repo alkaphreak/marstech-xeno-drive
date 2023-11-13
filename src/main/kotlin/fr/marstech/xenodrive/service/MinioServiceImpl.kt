@@ -1,34 +1,20 @@
 package fr.marstech.xenodrive.service
 
-import io.minio.MinioClient
+import io.minio.*
+import io.minio.messages.Item
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.nio.file.Path
+import kotlin.io.path.fileSize
+import kotlin.io.path.inputStream
 
 @Service
 class MinioServiceImpl(
     @Value("\${minio.endpoint}") val minioEndpoint: String,
     @Value("\${minio.accessKey}") val minioAccessKey: String,
-    @Value("\${minio.secretKey}") val minioSecretKey: String
+    @Value("\${minio.secretKey}") val minioSecretKey: String,
+    @Value("\${minio.bucket}") val minioBucket: String,
 ) : MinioService {
-
-//    fun uploadFile(file: MultipartFile) {
-//        val bucketName = "your-bucket-name"
-//        val objectName = file.originalFilename ?: "default.txt" // Use a default name if filename is empty
-//
-//        val inputStream: InputStream = file.inputStream
-//        val size: Long = file.size
-//
-//        minioClient.putObject(
-//            PutObjectArgs.builder()
-//                .bucket(bucketName)
-//                .`object`(objectName)
-//                .stream(inputStream, size, -1)
-//                .contentType("text/plain")
-//                .build()
-//        )
-//
-//        inputStream.close()
-//    }
 
     var client: MinioClient? = null
 
@@ -46,12 +32,50 @@ class MinioServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun uploadFile() {
-        TODO("Not yet implemented")
+    override fun uploadFile(
+        localFilePath: Path,
+        remoteFilePath: Path,
+        contentType: String?
+    ): ObjectWriteResponse? {
+        return connect()
+            .also {
+                if (!isBucketExists(minioBucket)) createBucket(minioBucket)
+            }
+            .putObject(PutObjectArgs
+                .builder()
+                .bucket(minioBucket)
+                .`object`(remoteFilePath.toString())
+                .stream(
+                    localFilePath.inputStream(),
+                    localFilePath.fileSize(),
+                    -1
+                ).also {
+                    if (!contentType.isNullOrEmpty()) it.contentType(contentType)
+                }
+                .build()
+            )
     }
 
-    override fun listDirectory() {
-        TODO("Not yet implemented")
+    private fun isBucketExists(bucketName: String): Boolean = connect()
+        .bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())
+
+    private fun createBucket(bucketName: String): Unit = connect()
+        .makeBucket(
+            MakeBucketArgs.builder().bucket(bucketName).build()
+        )
+
+    override fun listDirectory(remoteDirectoryPath: Path?): List<Result<Item>> {
+        return connect()
+            .listObjects(
+                ListObjectsArgs
+                    .builder()
+                    .bucket(minioBucket)
+                    .recursive(true)
+                    .also {
+                        if (remoteDirectoryPath != null) it.prefix(remoteDirectoryPath.toString())
+                    }
+                    .build()
+            ).toList()
     }
 
     override fun remove() {
