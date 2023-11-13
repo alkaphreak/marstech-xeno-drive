@@ -6,6 +6,8 @@ plugins {
     id("org.graalvm.buildtools.native") version "0.9.27"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
+    kotlin("plugin.noarg") version "1.8.22"
+
     id("org.sonarqube") version "4.2.1.3168"
 }
 
@@ -30,20 +32,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
-    //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
     // https://mvnrepository.com/artifact/io.minio/minio
     implementation("io.minio:minio:8.5.6")
 
-    // https://mvnrepository.com/artifact/io.kotest/kotest-assertions-core-jvm
-    testImplementation("io.kotest:kotest-assertions-core-jvm:5.7.2")
-    // https://mvnrepository.com/artifact/io.kotest/kotest-runner-junit5-jvm
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:5.7.2")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:minio:1.19.1")
 }
 
 tasks.withType<KotlinCompile> {
