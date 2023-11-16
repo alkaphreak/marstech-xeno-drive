@@ -1,5 +1,6 @@
 package fr.marstech.xenodrive.service
 
+import io.minio.GetObjectResponse
 import io.minio.MinioClient
 import io.minio.ObjectWriteResponse
 import io.minio.Result
@@ -9,7 +10,7 @@ import java.nio.file.Path
 interface MinioService {
     fun connect(): MinioClient
 
-    fun downloadFile()
+    fun downloadFile(remoteFilePath: String): GetObjectResponse?
 
     fun uploadFile(
         localFilePath: Path,

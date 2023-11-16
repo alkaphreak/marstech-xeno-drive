@@ -28,9 +28,13 @@ class MinioServiceImpl(
         else -> client!!
     }
 
-    override fun downloadFile() {
-        TODO("Not yet implemented")
-    }
+    override fun downloadFile(remoteFilePath: String): GetObjectResponse? = connect().getObject(
+        GetObjectArgs
+            .builder()
+            .bucket(minioBucket)
+            .`object`(remoteFilePath)
+            .build()
+    )
 
     override fun uploadFile(
         localFilePath: Path,

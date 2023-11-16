@@ -4,6 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.core.test.TestCase
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import io.minio.GetObjectResponse
 import io.minio.MinioClient
 import io.minio.ObjectWriteResponse
 import io.minio.Result
@@ -21,6 +22,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import kotlin.io.path.Path
+import kotlin.io.path.fileSize
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -70,28 +72,56 @@ class MinioServiceTest : StringSpec() {
 
         "Should upload/list successfully " {
             // Given
+            val localTempDirectory: Path =
+                Files.createTempDirectory("localFiles")
+
             val localFilePath: Path = Files.createTempFile(
-                Files.createTempDirectory("localFiles"),
+                localTempDirectory,
                 "localFile",
                 null
             )
+
             val remoteFilePath: Path = Path("my-minio/my-sub-path")
                 .resolve("${UUID.randomUUID()}.tmp")
 
+            val downloadedFilePath: Path = Files.createTempFile(
+                localTempDirectory,
+                "downloadedFile",
+                null
+            )
+
             // When
+            // Upload file
             val writeResponse: ObjectWriteResponse? = minioService.uploadFile(
                 localFilePath,
                 remoteFilePath
             )
-            val resultList: List<Result<Item>> = minioService.listDirectory(remoteFilePath.parent)
+
+            // List directory
+            val resultList: List<Result<Item>> = minioService.listDirectory(
+                remoteFilePath.parent
+            )
+
+            // Download file
+            val getResponse: GetObjectResponse? = minioService.downloadFile(
+                resultList.first().get().objectName()
+            )
 
             // Then
+            // File is successfully uploaded
             writeResponse != null
             writeResponse!!.bucket() shouldBe UUID_STR
             writeResponse.`object`() shouldBe remoteFilePath.toString()
 
+            // File is found during list in directory
             resultList.size shouldBe 1
             resultList[0].get().objectName() shouldBe remoteFilePath.toString()
+
+            // File is downloaded successfully
+            getResponse != null
+            getResponse!!.bucket() shouldBe UUID_STR
+            getResponse.`object`() shouldBe remoteFilePath.toString()
+            getResponse.readAllBytes().size shouldBe localFilePath.fileSize()
         }
     }
 
