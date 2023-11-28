@@ -68,9 +68,10 @@ class MinioServiceTest : StringSpec() {
 
             // Then
             client shouldNotBe null
+
         }
 
-        "Should upload/list successfully " {
+        "Should upload/list/download successfully " {
             // Given
             val localTempDirectory: Path =
                 Files.createTempDirectory("localFiles")
