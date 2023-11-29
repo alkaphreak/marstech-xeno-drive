@@ -1,6 +1,9 @@
 # marstech-xeno-drive
 
-Marstech test implem of Minio serveur with Kotlin and Spring boot Native
+Test implem of Minio server with Kotlin and Spring boot Native, Kotest and Testcontainers
+
+MinIO is a high-performance object storage system, designed to be an alternative to cloud-native storage systems,
+compatible with Amazon S3 API.
 
 # Sources
 
@@ -8,4 +11,3 @@ Marstech test implem of Minio serveur with Kotlin and Spring boot Native
 - https://min.io/docs/minio/linux/developers/java/API.html
 - https://www.baeldung.com/minio
 - https://java.testcontainers.org/modules/minio/
-- 
